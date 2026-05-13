@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiMo Synesthesia Studio</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Background Canvas for ambient particles -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Main Canvas for synesthesia art -->
+  <canvas id="mainCanvas"></canvas>
+
+  <!-- Audio Visualizer Canvas -->
+  <canvas id="audioCanvas"></canvas>
+
+  <!-- Landing / Hero Section -->
+  <div id="hero" class="section active">
+    <div class="hero-content">
+      <div class="logo-container">
+        <div class="logo-glow"></div>
+        <h1 class="logo-text">
+          <span class="logo-mi">MiMo</span>
+          <span class="logo-divider"></span>
+          <span class="logo-syn">Synesthesia</span>
+        </h1>
+        <p class="logo-sub">Studio</p>
+      </div>
+      <p class="hero-desc">Ubah kata-kata menjadi seni visual hidup, suara, dan warna.<br/>Setiap pikiran menciptakan karya unik yang belum pernah ada sebelumnya.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" id="statCreations">0</span>
+          <span class="stat-label">Karya Dibuat</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="statParticles">0</span>
+          <span class="stat-label">Partikel Aktif</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="statColors">0</span>
+          <span class="stat-label">Warna Unik</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="btnStart">
+        <span class="btn-icon">&#10024;</span>
+        Mulai Berkreasi
+        <span class="btn-arrow">&rarr;</span>
+      </button>
+      <p class="powered-by">Powered by <strong>Xiaomi MiMo AI</strong></p>
+    </div>
+  </div>
+
+  <!-- Studio Section -->
+  <div id="studio" class="section">
+    <div class="studio-header">
+      <button class="btn-back" id="btnBack">&larr; Kembali</button>
+      <h2 class="studio-title">Synesthesia Studio</h2>
+      <div class="studio-controls">
+        <button class="btn-icon-only" id="btnSound" title="Toggle Sound">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path class="sound-wave" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+        </button>
+        <button class="btn-icon-only" id="btnExport" title="Export Artwork">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7,10 12,15 17,10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </button>
+        <button class="btn-icon-only" id="btnFullscreen" title="Fullscreen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,3 21,3 21,9"/>
+            <polyline points="9,21 3,21 3,15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/>
+            <line x1="3" y1="21" x2="10" y2="14"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-container" id="inputContainer">
+      <div class="input-wrapper">
+        <textarea id="textInput" placeholder="Ketik pikiran, puisi, cerita, atau apapun..." rows="3" maxlength="500"></textarea>
+        <div class="input-footer">
+          <span class="char-count"><span id="charCount">0</span>/500</span>
+          <button class="btn-generate" id="btnGenerate">
+            <span class="btn-gen-icon">&#9733;</span>
+            Ciptakan Synesthesia
+          </button>
+        </div>
+      </div>
+      <div class="preset-prompts">
+        <span class="preset-label">Coba:</span>
+        <button class="preset-btn" data-text="Matahari terbenam di lautan tenang, warna emas menyatu dengan ungu langit">Sunset</button>
+        <button class="preset-btn" data-text="Hujan deras di kota malam, lampu neon memantul di aspal basah">Neon Rain</button>
+        <button class="preset-btn" data-text="Angin sejuk membawa aroma bunga sakura di musim semi">Sakura</button>
+        <button class="preset-btn" data-text="Galaksi spiral berputar lambat di keheningan ruang angkasa yang tak berujung">Galaxy</button>
+        <button class="preset-btn" data-text="Api unggun berderak di malam berbintang, kehangatan di tengah dinginnya hutan">Campfire</button>
+      </div>
+    </div>
+
+    <!-- Analysis Panel -->
+    <div class="analysis-panel" id="analysisPanel">
+      <div class="analysis-section">
+        <h3>Analisis Emosi</h3>
+        <div class="emotion-bars" id="emotionBars"></div>
+      </div>
+      <div class="analysis-section">
+        <h3>Palet Warna</h3>
+        <div class="color-palette" id="colorPalette"></div>
+      </div>
+      <div class="analysis-section">
+        <h3>Frekuensi Audio</h3>
+        <div class="freq-display" id="freqDisplay"></div>
+      </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery-section" id="gallerySection">
+      <h3 class="gallery-title">Galeri Kreasi</h3>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text" id="loadingText">Menganalisis emosi teks...</p>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/emotions.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/synesthesia.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
